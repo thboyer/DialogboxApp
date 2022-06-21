@@ -1,0 +1,37 @@
+[
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g -fno-omit-frame-pointer -fsanitize=address   -Wall -Wextra -pedantic -Werror -o CMakeFiles/DialogboxApp.dir/src/main.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/src/main.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/src/main.c"
+},
+
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o Dialog/CMakeFiles/dialog.dir/dialog.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/dialog.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/dialog.c"
+},
+
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o Dialog/CMakeFiles/dialog.dir/Container/container.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Container/container.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Container/container.c"
+},
+
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o Dialog/CMakeFiles/dialog.dir/Controls/ctrlControl.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlControl.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlControl.c"
+},
+
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLabel.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlLabel.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlLabel.c"
+},
+
+{
+  "directory": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build",
+  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLineEdit.c.o   -c /home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlLineEdit.c",
+  "file": "/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/Dialog/Controls/ctrlLineEdit.c"
+}
+]

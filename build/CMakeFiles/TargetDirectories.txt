@@ -1,0 +1,6 @@
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/CMakeFiles/rebuild_cache.dir
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/CMakeFiles/edit_cache.dir
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/CMakeFiles/DialogboxApp.dir
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/Dialog/CMakeFiles/edit_cache.dir
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/Dialog/CMakeFiles/rebuild_cache.dir
+/home/thierry/SCOLAIRE-2021-2022/UsingCMake-WRK/DialogboxApp/build/Dialog/CMakeFiles/dialog.dir
