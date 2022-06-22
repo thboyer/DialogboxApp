@@ -16,11 +16,12 @@ t_label*LabelNew(
     int iWidth,
     int iHeight,
     int colorBkgnd,
-    int colorText);
+    int colorText,
+    TTF_Font*pFont);
 
 t_label*LabelDel(t_label*pLabel);
 
-const t_label*LabelDraw(const t_label*pLabel, void*pParam);
+const t_label*LabelDraw(const t_label*pLabel, SDL_Renderer*pRenderer);
 
 #ifdef __cplusplus
 }

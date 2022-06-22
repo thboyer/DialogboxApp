@@ -15,6 +15,7 @@ extern "C" {
         SDL_Rect                m_frame;                \
         SDL_Color               m_colorBkgnd;           \
         SDL_Color               m_colorText;            \
+        TTF_Font*               m_pFont;                \
         /*----------vfptrs-------------------------*/   \
         t_ptfCtrlDel            m_ptfCtrlDel;           \
         t_ptfCtrlDraw           m_ptfCtrlDraw;          \
@@ -37,12 +38,14 @@ t_control*ControlNew(
         int iHeight,
         int colorBkgnd,
         int colorText,
+        TTF_Font*pFont,
         t_ptfCtrlDel            ptfCtrlDel,
         t_ptfCtrlDraw           ptfCtrlDraw,
         t_ptfCtrlDoEvent        ptfCtrlDoEvent);
 
 t_control*ControlDel(t_control*pControl);
-const t_control*ControlDraw(const t_control*pControl, void*pParam);
+
+const t_control*ControlDraw(const t_control*pControl, SDL_Renderer*pRenderer);
 
 const SDL_Rect*InflatRect(const SDL_Rect*r, int inflat);
 
@@ -57,8 +60,6 @@ const t_control*ControlCanTabStop(const t_control*pControl, void*pParam);
 t_control*ControlSetFocus(t_control*pControl, void*pParam);
 
 t_control*ControlClrFocus(t_control*pControl, void*pParam);
-
-
 
 char*ControlGetTitle(const t_control*pControl);
 
@@ -77,8 +78,6 @@ int  ControlSetHeight(t_control*pControl, int height);
 t_control*ControlDoCaret(t_control*pControl, void*pParam);
 
 t_control*ControlDoEvent(t_control*pControl, SDL_Event*pEvent, int iStatus);
-
-
 
 #ifdef __cplusplus
 }

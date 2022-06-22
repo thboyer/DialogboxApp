@@ -66,7 +66,7 @@ struct s_dialog{
 Uint32 _DialogTimerCallbackDoCaret(Uint32 interval, t_dialog*pDialog){
     t_control*pFocusedCtrl=ContainerParse(pDialog->m_pControls, (t_ptfVV)ControlDoCaret, NULL);
     if(pFocusedCtrl) {
-        ControlDraw(pFocusedCtrl, &(t_ctrlDrawParam){pDialog->m_pRenderer, pDialog->m_pFont});
+        ControlDraw(pFocusedCtrl, pDialog->m_pRenderer);
         SDL_RenderPresent(pDialog->m_pRenderer);
     }
     return interval;
@@ -192,7 +192,7 @@ int DialogDoModal(t_dialog*pDialog){
                     ContainerParseAll(
                         pDialog->m_pControls,
                         (t_ptfVV)ControlDraw,
-                        &(t_ctrlDrawParam){pDialog->m_pRenderer, pDialog->m_pFont});
+                        pDialog->m_pRenderer);
                 SDL_RenderPresent(pDialog->m_pRenderer);               
                 break;
             case SDL_KEYDOWN:
@@ -335,7 +335,8 @@ void DialogAddNewControl(
                 iWidth,
                 iHeight, 
                 colorBkgnd,
-                colorText));
+                colorText,
+                pDialog->m_pFont));
         break;
     case CTRL_TYPE_LINEEDIT:
         ContainerPushback(
@@ -349,7 +350,8 @@ void DialogAddNewControl(
                 iWidth,
                 iHeight, 
                 colorBkgnd,
-                colorText));
+                colorText,
+                pDialog->m_pFont));
         break;
     case CTRL_TYPE_PUSHBUTTON:
         break;

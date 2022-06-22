@@ -28,8 +28,8 @@ enum e_controlFlags{
     CTRL_FLAG_TABSTOPPED        = 0x00000020,
     CTRL_FLAG_FOCUSED           = 0x00000040,
     /*---------------------------------------------------*/
-    CRTL_IFLAG_CARET_ON         = 0x08000000,
-    CRTL_IFLAG_CANFOCUSE        = 0x04000000,
+    CTRL_IFLAG_CARET_ON         = 0x08000000,
+    CTRL_IFLAG_CANFOCUSE        = 0x04000000,
 
 };
 
@@ -43,6 +43,7 @@ t_control*ControlNew(
         int iHeight,
         int colorBkgnd,
         int colorText,
+        TTF_Font*pFont,
         t_ptfCtrlDel        ptfCtrlDel,
         t_ptfCtrlDraw       ptfCtrlDraw,
         t_ptfCtrlDoEvent    ptfCtrlDoEvent){
@@ -61,6 +62,7 @@ t_control*ControlNew(
         .m_frame            = (SDL_Rect){iLeft, iTop, iWidth, iHeight},
         .m_colorBkgnd       = *(SDL_Color*)&colorBkgnd,
         .m_colorText        = *(SDL_Color*)&colorText,
+        .m_pFont            = pFont,
     };
     strcpy(pControl->m_pTitle, title);
     return pControl;
@@ -75,9 +77,9 @@ t_control*ControlDel(t_control*pControl){
     return NULL;
 }
 
-const t_control*ControlDraw(const t_control*pControl, void*pParam){
+const t_control*ControlDraw(const t_control*pControl, SDL_Renderer*pRenderer){
     assert(pControl);
-    if(pControl->m_ptfCtrlDraw) pControl->m_ptfCtrlDraw(pControl, pParam);
+    if(pControl->m_ptfCtrlDraw) pControl->m_ptfCtrlDraw(pControl, pRenderer);
     else if(pControl->m_pTitle) printf("\tControlDraw()::title: \"%s\" ::id: %d\n", pControl->m_pTitle, pControl->m_ID);
     return pControl;
 }
@@ -105,24 +107,24 @@ const t_control*ControlHasFocus(const t_control*pControl, void*pParam){
 
 const t_control*ControlCanFocus(const t_control*pControl, void*pParam){
     assert(pControl);
-    return mIsBitsSet(pControl->m_iStatus, CTRL_FLAG_ENABLED|CTRL_FLAG_SHOWN|CRTL_IFLAG_CANFOCUSE)?pControl:NULL;
+    return mIsBitsSet(pControl->m_iStatus, CTRL_FLAG_ENABLED|CTRL_FLAG_SHOWN|CTRL_IFLAG_CANFOCUSE)?pControl:NULL;
 }
 
 const t_control*ControlCanTabStop(const t_control*pControl, void*pParam){
     assert(pControl);
-    return mIsBitsSet(pControl->m_iStatus, CTRL_FLAG_ENABLED|CTRL_FLAG_SHOWN|CRTL_IFLAG_CANFOCUSE|CTRL_FLAG_TABSTOPPED)?pControl:NULL;
+    return mIsBitsSet(pControl->m_iStatus, CTRL_FLAG_ENABLED|CTRL_FLAG_SHOWN|CTRL_IFLAG_CANFOCUSE|CTRL_FLAG_TABSTOPPED)?pControl:NULL;
 }
 
 
 t_control*ControlSetFocus(t_control*pControl, void*pParam){
     assert(pControl);
-    if(mIsBitsSet(pControl->m_iStatus, CRTL_IFLAG_CANFOCUSE)) mBitsSet(pControl->m_iStatus, CTRL_FLAG_FOCUSED);
+    if(mIsBitsSet(pControl->m_iStatus, CTRL_IFLAG_CANFOCUSE)) mBitsSet(pControl->m_iStatus, CTRL_FLAG_FOCUSED);
     return pControl;
 }
 
 t_control*ControlClrFocus(t_control*pControl, void*pParam){
     assert(pControl);
-    if(mIsBitsSet(pControl->m_iStatus, CRTL_IFLAG_CANFOCUSE)) mBitsClr(pControl->m_iStatus, CTRL_FLAG_FOCUSED);
+    if(mIsBitsSet(pControl->m_iStatus, CTRL_IFLAG_CANFOCUSE)) mBitsClr(pControl->m_iStatus, CTRL_FLAG_FOCUSED);
     return pControl;
 }
 
@@ -168,7 +170,7 @@ int  ControlSetHeight(t_control*pControl, int height){
 t_control*ControlDoCaret(t_control*pControl, void*pParam){
     assert(pControl);
     if(mIsBitsClr(pControl->m_iStatus, CTRL_FLAG_FOCUSED)) return NULL;
-    mBitsTgl(pControl->m_iStatus, CRTL_IFLAG_CARET_ON);
+    mBitsTgl(pControl->m_iStatus, CTRL_IFLAG_CARET_ON);
     return pControl;
 }
 

@@ -185,8 +185,7 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        ""
-        // "<your phone number>"
+        "<your phone number, right!>"
         );
 
 

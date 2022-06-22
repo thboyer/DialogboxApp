@@ -16,11 +16,12 @@ t_lineEdit*LineEditNew(
     int iWidth,
     int iHeight,
     int colorBkgnd,
-    int colorText);
+    int colorText,
+    TTF_Font*pFont);
 
 t_lineEdit*LineEditDel(t_lineEdit*pLineEdit);
 
-const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, void*pParam);
+const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, SDL_Renderer*pRenderer);
 
 t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus);
 

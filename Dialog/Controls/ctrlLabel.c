@@ -27,11 +27,6 @@ enum e_controlFlags{
 };
 
 
-typedef struct s_ctrlDrawParam{
-    SDL_Renderer*pRenderer;
-    TTF_Font*pFont;
-}t_ctrlDrawParam;
-
 struct s_label {
 	__CONTROL_COMMON_FIELDS__
     /*-------------------------------------------*/
@@ -46,7 +41,8 @@ t_label*LabelNew(
     int iWidth,
     int iHeight,
     int colorBkgnd,
-    int colorText){
+    int colorText,
+    TTF_Font*pFont){
     return (t_label*)ControlNew(
         controlID,
         controlFlags,
@@ -57,6 +53,7 @@ t_label*LabelNew(
         iHeight,
         colorBkgnd,
         colorText,
+        pFont,
         (t_ptfCtrlDel)NULL,
         (t_ptfCtrlDraw)LabelDraw,
         (t_ptfCtrlDoEvent)NULL);
@@ -66,13 +63,10 @@ t_label*LabelDel(t_label*pLabel){
     return (t_label*)ControlDel((t_control*)pLabel);
 }
 
-const t_label*LabelDraw(const t_label*pLabel, void*pParam){
+const t_label*LabelDraw(const t_label*pLabel, SDL_Renderer*pRenderer){
     assert(pLabel);
     if(mIsBitsClr(pLabel->m_iStatus, CTRL_FLAG_SHOWN)) return pLabel;
     
-    SDL_Renderer*pRenderer=((t_ctrlDrawParam*)pParam)->pRenderer;
-    TTF_Font*pFont=((t_ctrlDrawParam*)pParam)->pFont;
-
     if(pLabel->m_pTitle) printf("\tLabelDraw()::title: \"%s\" ::id: %d\n", pLabel->m_pTitle, pLabel->m_ID);
     SDL_SetRenderDrawColor(pRenderer, pLabel->m_colorBkgnd.r, pLabel->m_colorBkgnd.g, pLabel->m_colorBkgnd.b, pLabel->m_colorBkgnd.a);
     SDL_RenderFillRect(pRenderer, &pLabel->m_frame);
@@ -80,7 +74,7 @@ const t_label*LabelDraw(const t_label*pLabel, void*pParam){
 
     if(pLabel->m_iTitleLength==0) return pLabel;
 
-    SDL_Surface*pSurf=TTF_RenderText_Blended(pFont, pLabel->m_pTitle, pLabel->m_colorText);
+    SDL_Surface*pSurf=TTF_RenderText_Blended(pLabel->m_pFont, pLabel->m_pTitle, pLabel->m_colorText);
     SDL_Texture*pText=SDL_CreateTextureFromSurface(pRenderer, pSurf);
     SDL_Rect rSrc={0, 0, pSurf->w, pSurf->h},  rDst = *InflatRect(&pLabel->m_frame, __CONTROL_INFLAT_PADDING);
 
