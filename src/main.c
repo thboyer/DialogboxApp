@@ -125,7 +125,9 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "<your name>");
+        ""
+        // "<your name>"
+        );
 
     DialogAddNewControl(
         pDlgbox,
@@ -138,7 +140,9 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "<your last name>");
+        ""
+        // "<your last name>"
+        );
 
     DialogAddNewControl(
         pDlgbox,
@@ -151,7 +155,9 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "<your pseudo>");
+        "NULL"
+        // "<your pseudo>"
+        );
 
     DialogAddNewControl(
         pDlgbox,
@@ -164,7 +170,9 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "<your mail>");
+        ""
+        // "<your mail>"
+        );
 
     DialogAddNewControl(
         pDlgbox,
@@ -173,11 +181,13 @@ int main(int argc, char**argv){
         15,
         DIALOGBOX_LABEL_HRZSTART + DIALOGBOX_LABEL_WIDTH + DIALOGBOX_CTRL_HRZSPACING,
         DIALOGBOX_LABEL_VERTSTART+4*(DIALOGBOX_LABEL_HEIGHT+DIALOGBOX_LABEL_VERTSPACING),
-        DIALOGBOX_LINEEDIT_WIDTH,
+        DIALOGBOX_LINEEDIT_WIDTH/4,
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "<your phone number>");
+        ""
+        // "<your phone number>"
+        );
 
 
     int res=DialogDoModal(pDlgbox);

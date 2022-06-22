@@ -90,43 +90,43 @@ const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, void*pParam){
     SDL_SetRenderDrawColor(pRenderer, pLineEdit->m_colorBkgnd.r, pLineEdit->m_colorBkgnd.g, pLineEdit->m_colorBkgnd.b, pLineEdit->m_colorBkgnd.a);
     SDL_RenderFillRect(pRenderer, &pLineEdit->m_frame);
 
-    if(pLineEdit->m_iTitleLength==0) return pLineEdit;
+    if(pLineEdit->m_iTitleLength){
+        SDL_Surface*pSurf=TTF_RenderText_Blended(pFont, pLineEdit->m_pTitle, pLineEdit->m_colorText);
+        SDL_Texture*pText=SDL_CreateTextureFromSurface(pRenderer, pSurf);
+        SDL_Rect rSrc={0, 0, pSurf->w, pSurf->h},  rDst = *InflatRect(&pLineEdit->m_frame, __CONTROL_INFLAT_PADDING);
 
-    SDL_Surface*pSurf=TTF_RenderText_Blended(pFont, pLineEdit->m_pTitle, pLineEdit->m_colorText);
-    SDL_Texture*pText=SDL_CreateTextureFromSurface(pRenderer, pSurf);
-    SDL_Rect rSrc={0, 0, pSurf->w, pSurf->h},  rDst = *InflatRect(&pLineEdit->m_frame, __CONTROL_INFLAT_PADDING);
-
-    /*if(mIsBitsSet(pLineEdit->m_iStatus, CTRL_FLAG_CENTERED)){
-        if(pSurf->w>rDst.w){
-            rSrc.x=(pSurf->w-rDst.w)/2;
-            rSrc.w=rDst.w;
+        /*if(mIsBitsSet(pLineEdit->m_iStatus, CTRL_FLAG_CENTERED)){
+            if(pSurf->w>rDst.w){
+                rSrc.x=(pSurf->w-rDst.w)/2;
+                rSrc.w=rDst.w;
+            }
+            else{
+                rDst.x=(rDst.w-pSurf->w)/2;
+                rDst.w = pSurf->w;
+            }
         }
-        else{
-            rDst.x=(rDst.w-pSurf->w)/2;
-            rDst.w = pSurf->w;
+        else */if(mIsBitsSet(pLineEdit->m_iStatus, CTRL_FLAG_RIGHTJUSTIFIED)){
+            if(pSurf->w>rDst.w){
+                rSrc.x=(pSurf->w-rDst.w);
+                rSrc.w=rDst.w;
+            }
+            else{
+                rDst.x+=rDst.w-pSurf->w;
+                rDst.w = pSurf->w;
+            }
         }
+        else{ // default, left justified
+            if(pSurf->w>rDst.w){
+                rSrc.w=rDst.w;
+            }
+            else{
+                rDst.w = pSurf->w;
+            }        
+        }
+        SDL_RenderCopy(pRenderer, pText, &rSrc, &rDst);
+        SDL_FreeSurface(pSurf);
+        SDL_DestroyTexture(pText);
     }
-    else */if(mIsBitsSet(pLineEdit->m_iStatus, CTRL_FLAG_RIGHTJUSTIFIED)){
-        if(pSurf->w>rDst.w){
-            rSrc.x=(pSurf->w-rDst.w);
-            rSrc.w=rDst.w;
-        }
-        else{
-            rDst.x+=rDst.w-pSurf->w;
-            rDst.w = pSurf->w;
-        }
-    }
-    else{ // default, left justified
-        if(pSurf->w>rDst.w){
-            rSrc.w=rDst.w;
-        }
-        else{
-            rDst.w = pSurf->w;
-        }        
-    }
-
-    SDL_RenderCopy(pRenderer, pText, &rSrc, &rDst);
-
 
     /****************************PROCESSING THE CARET***************************************************/
     if(mIsBitsSet(pLineEdit->m_iStatus, CTRL_FLAG_FOCUSED | CRTL_IFLAG_CARET_ON)){
@@ -135,10 +135,10 @@ const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, void*pParam){
             char*pSubTitle=(char*)malloc(pLineEdit->m_iLineIndex+1);
             strncpy(pSubTitle, pLineEdit->m_pTitle, pLineEdit->m_iLineIndex);
             pSubTitle[pLineEdit->m_iLineIndex]='\0';
-            SDL_FreeSurface(pSurf);
-            pSurf=TTF_RenderText_Blended(pFont, pSubTitle, pLineEdit->m_colorText);
-            free(pSubTitle);
+            SDL_Surface*pSurf=TTF_RenderText_Blended(pFont, pSubTitle, pLineEdit->m_colorText);
             x+=pSurf->w;
+            SDL_FreeSurface(pSurf);
+            free(pSubTitle);
         }
         SDL_SetRenderDrawColor(pRenderer, pLineEdit->m_colorText.r, pLineEdit->m_colorText.g, pLineEdit->m_colorText.b, pLineEdit->m_colorText.a);
         SDL_RenderDrawLine(
@@ -149,9 +149,6 @@ const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, void*pParam){
             pLineEdit->m_frame.y+(-__CONTROL_INFLAT_PADDING)+pLineEdit->m_frame.h-2*(-__CONTROL_INFLAT_PADDING)
         );
     }
-
-    SDL_FreeSurface(pSurf);
-    SDL_DestroyTexture(pText);
     return pLineEdit;
 }
 
