@@ -153,6 +153,12 @@ build Dialog/CMakeFiles/dialog.dir/Controls/ctrlLineEdit.c.o: C_COMPILER__dialog
   OBJECT_DIR = Dialog/CMakeFiles/dialog.dir
   OBJECT_FILE_DIR = Dialog/CMakeFiles/dialog.dir/Controls
 
+build Dialog/CMakeFiles/dialog.dir/Controls/ctrlGauge.c.o: C_COMPILER__dialog ../Dialog/Controls/ctrlGauge.c || cmake_object_order_depends_target_dialog
+  DEP_FILE = Dialog/CMakeFiles/dialog.dir/Controls/ctrlGauge.c.o.d
+  FLAGS = -g
+  OBJECT_DIR = Dialog/CMakeFiles/dialog.dir
+  OBJECT_FILE_DIR = Dialog/CMakeFiles/dialog.dir/Controls
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target dialog
@@ -161,7 +167,7 @@ build Dialog/CMakeFiles/dialog.dir/Controls/ctrlLineEdit.c.o: C_COMPILER__dialog
 #############################################
 # Link the static library Dialog/libdialog.a
 
-build Dialog/libdialog.a: C_STATIC_LIBRARY_LINKER__dialog Dialog/CMakeFiles/dialog.dir/dialog.c.o Dialog/CMakeFiles/dialog.dir/Container/container.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlControl.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLabel.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLineEdit.c.o
+build Dialog/libdialog.a: C_STATIC_LIBRARY_LINKER__dialog Dialog/CMakeFiles/dialog.dir/dialog.c.o Dialog/CMakeFiles/dialog.dir/Container/container.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlControl.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLabel.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlLineEdit.c.o Dialog/CMakeFiles/dialog.dir/Controls/ctrlGauge.c.o
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = Dialog/CMakeFiles/dialog.dir
   POST_BUILD = :

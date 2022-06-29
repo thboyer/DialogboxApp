@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-#define __CONTROL_INFLAT_PADDING        (-2)
+#define __CONTROL_INFLAT_PADDING        (-3)
+#define __CONTROL_COLOR_TEXT_DISABLED   (SDL_Color){180,180,180,255}
 
 #define __CONTROL_COMMON_FIELDS__                       \
         int                     m_ID;                   \
@@ -75,7 +76,7 @@ int  ControlSetWidth(t_control*pControl, int width);
 
 int  ControlSetHeight(t_control*pControl, int height);
 
-t_control*ControlDoCaret(t_control*pControl, void*pParam);
+t_control*ControlDoCaret(t_control*pControl, void*);
 
 t_control*ControlDoEvent(t_control*pControl, SDL_Event*pEvent, int iStatus);
 

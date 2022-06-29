@@ -13,16 +13,16 @@
 #include "../Dialog/dialog.h"
 
 #define DIALOGBOX_WIDTH                 (800)
-#define DIALOGBOX_HEIGHT                (400)
+#define DIALOGBOX_HEIGHT                (380)
 #define DIALOGBOX_COLORBKGND            (0xFFA0A0A0)
 #define DIALOGBOX_FONTFILESTR           ("../Resources/Fonts/arial.ttf")
-#define DIALOGBOX_FONTSIZE              (30)
+#define DIALOGBOX_FONTSIZE              (24)
 
 #define DIALOGBOX_CTRL_HRZSPACING       (5)
 
 #define DIALOGBOX_LABEL_COLORBKGND      (0xFFF0F0F0)
 #define DIALOGBOX_LABEL_WIDTH           (200)
-#define DIALOGBOX_LABEL_HEIGHT          (25)
+#define DIALOGBOX_LABEL_HEIGHT          (30)
 #define DIALOGBOX_LABEL_VERTSPACING     (10)
 #define DIALOGBOX_LABEL_HRZSTART        (10)
 #define DIALOGBOX_LABEL_VERTSTART       (10)
@@ -31,7 +31,9 @@
 #define DIALOGBOX_LINEEDIT_COLORBKGND   (0xFFD0D0D0)
 #define DIALOGBOX_LINEEDIT_COLORTEXT    (0xFF202020)
 
-
+#define DIALOGBOX_GAUGE_SIZE            ((DIALOGBOX_WIDTH-6*DIALOGBOX_LABEL_HRZSTART)/5)
+#define DIALOGBOX_GAUGE_COLORBKGND      (0xFF909090)
+#define DIALOGBOX_GAUGE_COLORTEXT       (0xFF0000FF)
 
 int main(int argc, char**argv){
 
@@ -125,8 +127,7 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        ""
-        // "<your name>"
+        "<your name>"
         );
 
     DialogAddNewControl(
@@ -140,14 +141,13 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        ""
-        // "<your last name>"
+        "<your last name>"
         );
 
     DialogAddNewControl(
         pDlgbox,
         CTRL_TYPE_LINEEDIT,
-        CTRL_FLAG_ENABLED | CTRL_FLAG_LEFTJUSTIFIED | CTRL_FLAG_SHOWN | CTRL_FLAG_TABSTOPPED | CTRL_FLAG_FOCUSED, 
+        CTRL_FLAG_ENABLED | CTRL_FLAG_LEFTJUSTIFIED | CTRL_FLAG_SHOWN | CTRL_FLAG_TABSTOPPED, 
         13,
         DIALOGBOX_LABEL_HRZSTART + DIALOGBOX_LABEL_WIDTH + DIALOGBOX_CTRL_HRZSPACING,
         DIALOGBOX_LABEL_VERTSTART+2*(DIALOGBOX_LABEL_HEIGHT+DIALOGBOX_LABEL_VERTSPACING),
@@ -155,8 +155,7 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        "NULL"
-        // "<your pseudo>"
+        "<your pseudo>"
         );
 
     DialogAddNewControl(
@@ -170,18 +169,17 @@ int main(int argc, char**argv){
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
-        ""
-        // "<your mail>"
+        "<your mail>"
         );
 
     DialogAddNewControl(
         pDlgbox,
         CTRL_TYPE_LINEEDIT,
-        CTRL_FLAG_ENABLED | CTRL_FLAG_LEFTJUSTIFIED | CTRL_FLAG_SHOWN | CTRL_FLAG_TABSTOPPED, 
+        CTRL_FLAG_ENABLED | CTRL_FLAG_LEFTJUSTIFIED | CTRL_FLAG_SHOWN | CTRL_FLAG_TABSTOPPED | CTRL_FLAG_FOCUSED, 
         15,
         DIALOGBOX_LABEL_HRZSTART + DIALOGBOX_LABEL_WIDTH + DIALOGBOX_CTRL_HRZSPACING,
         DIALOGBOX_LABEL_VERTSTART+4*(DIALOGBOX_LABEL_HEIGHT+DIALOGBOX_LABEL_VERTSPACING),
-        DIALOGBOX_LINEEDIT_WIDTH/4,
+        DIALOGBOX_LINEEDIT_WIDTH/3,
         DIALOGBOX_LABEL_HEIGHT,
         DIALOGBOX_LINEEDIT_COLORBKGND,
         DIALOGBOX_LINEEDIT_COLORTEXT,
@@ -189,6 +187,75 @@ int main(int argc, char**argv){
         );
 
 
+    DialogAddNewControl(
+        pDlgbox,
+        CTRL_TYPE_GAUGE,
+        CTRL_FLAG_ENABLED | CTRL_FLAG_SHOWN, 
+        50,
+        DIALOGBOX_WIDTH-(DIALOGBOX_GAUGE_SIZE+DIALOGBOX_LABEL_HRZSTART),
+        DIALOGBOX_HEIGHT-DIALOGBOX_GAUGE_SIZE-DIALOGBOX_LABEL_VERTSPACING,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_COLORBKGND,
+        DIALOGBOX_GAUGE_COLORTEXT,
+        "<a simple gauge>"
+        );
+
+    DialogAddNewControl(
+        pDlgbox,
+        CTRL_TYPE_GAUGE,
+        CTRL_FLAG_ENABLED | CTRL_FLAG_SHOWN, 
+        51,
+        DIALOGBOX_WIDTH-2*(DIALOGBOX_GAUGE_SIZE+DIALOGBOX_LABEL_HRZSTART),
+        DIALOGBOX_HEIGHT-DIALOGBOX_GAUGE_SIZE-DIALOGBOX_LABEL_VERTSPACING,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_COLORBKGND,
+        DIALOGBOX_GAUGE_COLORTEXT,
+        "<a simple gauge>"
+        );
+
+    DialogAddNewControl(
+        pDlgbox,
+        CTRL_TYPE_GAUGE,
+        CTRL_FLAG_ENABLED | CTRL_FLAG_SHOWN, 
+        52,
+        DIALOGBOX_WIDTH-3*(DIALOGBOX_GAUGE_SIZE+DIALOGBOX_LABEL_HRZSTART),
+        DIALOGBOX_HEIGHT-DIALOGBOX_GAUGE_SIZE-DIALOGBOX_LABEL_VERTSPACING,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_COLORBKGND,
+        DIALOGBOX_GAUGE_COLORTEXT,
+        "<a simple gauge>"
+        );
+
+    DialogAddNewControl(
+        pDlgbox,
+        CTRL_TYPE_GAUGE,
+        CTRL_FLAG_ENABLED | CTRL_FLAG_SHOWN, 
+        53,
+        DIALOGBOX_WIDTH-4*(DIALOGBOX_GAUGE_SIZE+DIALOGBOX_LABEL_HRZSTART),
+        DIALOGBOX_HEIGHT-DIALOGBOX_GAUGE_SIZE-DIALOGBOX_LABEL_VERTSPACING,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_COLORBKGND,
+        DIALOGBOX_GAUGE_COLORTEXT,
+        "<a simple gauge>"
+        );
+
+    DialogAddNewControl(
+        pDlgbox,
+        CTRL_TYPE_GAUGE,
+        CTRL_FLAG_ENABLED | CTRL_FLAG_SHOWN, 
+        54,
+        DIALOGBOX_WIDTH-5*(DIALOGBOX_GAUGE_SIZE+DIALOGBOX_LABEL_HRZSTART),
+        DIALOGBOX_HEIGHT-DIALOGBOX_GAUGE_SIZE-DIALOGBOX_LABEL_VERTSPACING,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_SIZE,
+        DIALOGBOX_GAUGE_COLORBKGND,
+        DIALOGBOX_GAUGE_COLORTEXT,
+        "<a simple gauge>"
+        );
     int res=DialogDoModal(pDlgbox);
     DialogDel(pDlgbox);
 

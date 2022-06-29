@@ -47,7 +47,6 @@ t_control*ControlNew(
         t_ptfCtrlDel        ptfCtrlDel,
         t_ptfCtrlDraw       ptfCtrlDraw,
         t_ptfCtrlDoEvent    ptfCtrlDoEvent){
-    printf("\tControlNew()\n");
     t_control*pControl=(t_control*)malloc(sizeof(t_control));
     assert(pControl);
     if(title==NULL) title="";
@@ -65,14 +64,17 @@ t_control*ControlNew(
         .m_pFont            = pFont,
     };
     strcpy(pControl->m_pTitle, title);
+
+    printf("\tControlNew()::@%p\n", pControl);
+
     return pControl;
 }
 
 t_control*ControlDel(t_control*pControl){
-    printf("\tControlDel()\n");
     assert(pControl);
-    if(pControl->m_pTitle) free(pControl->m_pTitle);
+    printf("\tControlDel()::@%p\n", pControl);
     if(pControl->m_ptfCtrlDel) pControl->m_ptfCtrlDel(pControl);
+    if(pControl->m_pTitle) free(pControl->m_pTitle);
     free(pControl);
     return NULL;
 }
@@ -169,6 +171,7 @@ int  ControlSetHeight(t_control*pControl, int height){
 
 t_control*ControlDoCaret(t_control*pControl, void*pParam){
     assert(pControl);
+    (void)pParam;
     if(mIsBitsClr(pControl->m_iStatus, CTRL_FLAG_FOCUSED)) return NULL;
     mBitsTgl(pControl->m_iStatus, CTRL_IFLAG_CARET_ON);
     return pControl;

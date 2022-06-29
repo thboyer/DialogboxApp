@@ -16,6 +16,7 @@ typedef enum e_controlType{
     CTRL_TYPE_LINEEDIT,
     CTRL_TYPE_PUSHBUTTON,
     CTRL_TYPE_LISTBOX,
+    CTRL_TYPE_GAUGE,
 }t_controlType;
 
 typedef enum e_controlFlags{

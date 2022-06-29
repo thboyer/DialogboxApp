@@ -21,7 +21,7 @@ t_lineEdit*LineEditNew(
 
 t_lineEdit*LineEditDel(t_lineEdit*pLineEdit);
 
-const t_lineEdit*LineEditDraw(const t_lineEdit*pLineEdit, SDL_Renderer*pRenderer);
+ t_lineEdit*LineEditDraw( t_lineEdit*pLineEdit, SDL_Renderer*pRenderer);
 
 t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus);
 

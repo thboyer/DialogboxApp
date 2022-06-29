@@ -8,6 +8,7 @@ set(SRCS
     ./Controls/ctrlControl.c
     ./Controls/ctrlLabel.c
     ./Controls/ctrlLineEdit.c
+    ./Controls/ctrlGauge.c
 )
 
 set(dialog
@@ -16,6 +17,7 @@ set(dialog
     ./Controls/ctrlControl.h
     ./Controls/ctrlLabel.h
     ./Controls/ctrlLineEdit.h
+    ./Controls/ctrlGauge.h
 )
 
 add_library(dialog ${SRCS} ${HEADERS})

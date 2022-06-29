@@ -67,14 +67,17 @@ const t_label*LabelDraw(const t_label*pLabel, SDL_Renderer*pRenderer){
     assert(pLabel);
     if(mIsBitsClr(pLabel->m_iStatus, CTRL_FLAG_SHOWN)) return pLabel;
     
-    if(pLabel->m_pTitle) printf("\tLabelDraw()::title: \"%s\" ::id: %d\n", pLabel->m_pTitle, pLabel->m_ID);
+    // if(pLabel->m_pTitle) printf("\tLabelDraw()::title: \"%s\" ::id: %d\n", pLabel->m_pTitle, pLabel->m_ID);
     SDL_SetRenderDrawColor(pRenderer, pLabel->m_colorBkgnd.r, pLabel->m_colorBkgnd.g, pLabel->m_colorBkgnd.b, pLabel->m_colorBkgnd.a);
     SDL_RenderFillRect(pRenderer, &pLabel->m_frame);
 
 
     if(pLabel->m_iTitleLength==0) return pLabel;
 
-    SDL_Surface*pSurf=TTF_RenderText_Blended(pLabel->m_pFont, pLabel->m_pTitle, pLabel->m_colorText);
+    SDL_Surface*pSurf=TTF_RenderText_Blended(
+                                        pLabel->m_pFont,
+                                        pLabel->m_pTitle,
+                                        mIsBitsSet(pLabel->m_iStatus, CTRL_FLAG_ENABLED)? pLabel->m_colorText : __CONTROL_COLOR_TEXT_DISABLED);
     SDL_Texture*pText=SDL_CreateTextureFromSurface(pRenderer, pSurf);
     SDL_Rect rSrc={0, 0, pSurf->w, pSurf->h},  rDst = *InflatRect(&pLabel->m_frame, __CONTROL_INFLAT_PADDING);
 

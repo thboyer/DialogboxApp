@@ -10,6 +10,7 @@
 #include "./Controls/ctrlControl.h"
 #include "./Controls/ctrlLabel.h"
 #include "./Controls/ctrlLineEdit.h"
+#include "./Controls/ctrlGauge.h"
 #include "dialog.h"
 
 #define mBitsSet(f,m)       ((f)|=(m))
@@ -356,6 +357,21 @@ void DialogAddNewControl(
     case CTRL_TYPE_PUSHBUTTON:
         break;
     case CTRL_TYPE_LISTBOX:
+        break;
+    case CTRL_TYPE_GAUGE:
+        ContainerPushback(
+            pDialog->m_pControls,
+            GaugeNew(
+                ctrlID,
+                ctrlFlags,
+                titleStr,
+                iLeft,
+                iTop,
+                iWidth,
+                iHeight, 
+                colorBkgnd,
+                colorText,
+                pDialog->m_pFont));
         break;
     default:
         break;
