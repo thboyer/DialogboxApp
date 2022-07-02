@@ -46,7 +46,8 @@ typedef enum e_statusMasks{
     ST_DLG_INSERTLOCKED     = 0x00040000,
     ST_DLG_LEFTSHIFT        = 0x00080000,
     ST_DLG_RIGHTSHIFT       = 0x00100000,
-    ST_DLG_CTRL_STATUS_MASK = ST_DLG_CAPSLOCKED|ST_DLG_NUMLOCKED|ST_DLG_INSERTLOCKED|ST_DLG_LEFTSHIFT|ST_DLG_RIGHTSHIFT,
+    ST_DLG_ALTGR            = 0x00200000,
+    ST_DLG_CTRL_STATUS_MASK = ST_DLG_CAPSLOCKED|ST_DLG_NUMLOCKED|ST_DLG_INSERTLOCKED|ST_DLG_LEFTSHIFT|ST_DLG_RIGHTSHIFT|ST_DLG_ALTGR,
 }t_status;
 
 struct s_dialog{
@@ -80,7 +81,7 @@ t_dialog*DialogNew(char*title, int iWidth, int iHeight, int colorBkgnd, char*fon
     t_dialog*pDialog=(t_dialog*)malloc(sizeof(t_dialog));
     assert(pDialog);
     *pDialog=(t_dialog){
-        .m_uStatus      = ST_DLG_CAPSLOCKED|ST_DLG_INSERTLOCKED,
+        .m_uStatus      = ST_DLG_NUMLOCKED,
         .m_iWidth       = iWidth,
         .m_iHeight      = iHeight,
         .m_colorBkgnd   = *(SDL_Color*)&colorBkgnd,
@@ -205,7 +206,12 @@ int DialogDoModal(t_dialog*pDialog){
                 if(ControlDoEvent(ContainerParse(pDialog->m_pControls, (t_ptfVV)ControlHasFocus, NULL), &event, pDialog->m_uStatus&ST_DLG_CTRL_STATUS_MASK)==0){
                     /* DialogBox can process the pressed key *****************************************/
                     switch(event.key.keysym.scancode){
-                    case 43:    /* TAB */
+                    case SDL_SCANCODE_DELETE:
+                        if(mIsBitsSet(pDialog->m_uStatus, ST_DLG_LEFTSHIFT)){
+                            mBitsTgl(pDialog->m_uStatus, ST_DLG_INSERTLOCKED);
+                        }
+                        break;
+                    case SDL_SCANCODE_TAB:    /* TAB */
                         if(mIsBitsClr(pDialog->m_uStatus, ST_DLG_LEFTSHIFT)){
                             /* TAB */ /* Process tab stop on controls */
                             t_control*pCtrlFocused=(t_control*)ContainerParse(pDialog->m_pControls, (t_ptfVV)ControlHasFocus, NULL);
@@ -227,17 +233,20 @@ int DialogDoModal(t_dialog*pDialog){
                             }
                         }
                         break;
-                    case 57:    /* CAPS Lock */
+                    case SDL_SCANCODE_CAPSLOCK:    /* CAPS Lock */
                         mBitsTgl(pDialog->m_uStatus, ST_DLG_CAPSLOCKED);
                         break;
-                    case 83:    /* NUM Lock */
+                    case SDL_SCANCODE_NUMLOCKCLEAR:    /* NUM Lock */
                         mBitsTgl(pDialog->m_uStatus, ST_DLG_NUMLOCKED);
                         break;
-                    case 225:   /* LEFT SHIFT */
+                    case SDL_SCANCODE_LSHIFT:   /* LEFT SHIFT */
                         mBitsSet(pDialog->m_uStatus, ST_DLG_LEFTSHIFT);
                         break;
-                    case 229:   /* RIGHT SHIFT */
+                    case SDL_SCANCODE_RSHIFT:   /* RIGHT SHIFT */
                         mBitsSet(pDialog->m_uStatus, ST_DLG_RIGHTSHIFT);
+                        break;
+                    case SDL_SCANCODE_RALT:
+                        mBitsSet(pDialog->m_uStatus, ST_DLG_ALTGR);
                         break;
                     default:
                         switch (event.key.keysym.sym){
@@ -245,23 +254,23 @@ int DialogDoModal(t_dialog*pDialog){
                             event.type=SDL_QUIT;
                             SDL_PushEvent(&event);
                             break;
-                        case SDLK_x:
-                            // printf("%s\n", DialogControlGetTitle(pDialog, 4));
-                            {
-                                char*pTitle=(char*)malloc(strlen(DialogControlGetTitle(pDialog, 1))+1);
-                                strcpy(pTitle, DialogControlGetTitle(pDialog, 1));
-                                DialogControlSetTitle(pDialog, 1, DialogControlGetTitle(pDialog, 2));
-                                DialogControlSetTitle(pDialog, 2, DialogControlGetTitle(pDialog, 3));
-                                DialogControlSetTitle(pDialog, 3, pTitle);
-                                free(pTitle);
-                            }
-                            break;
-                        case SDLK_f:
-                            DialogControlSetFlags(pDialog, 1, CTRL_FLAG_RIGHTJUSTIFIED);
-                            DialogControlSetWidth(pDialog, 1, 400);
-                            printf("H: %d\n",DialogControlSetHeight(pDialog, 3, 160));
-                            DialogControlShow(pDialog, 2, f); f^=1;
-                            break;
+                        // case SDLK_x:
+                        //     // printf("%s\n", DialogControlGetTitle(pDialog, 4));
+                        //     {
+                        //         char*pTitle=(char*)malloc(strlen(DialogControlGetTitle(pDialog, 1))+1);
+                        //         strcpy(pTitle, DialogControlGetTitle(pDialog, 1));
+                        //         DialogControlSetTitle(pDialog, 1, DialogControlGetTitle(pDialog, 2));
+                        //         DialogControlSetTitle(pDialog, 2, DialogControlGetTitle(pDialog, 3));
+                        //         DialogControlSetTitle(pDialog, 3, pTitle);
+                        //         free(pTitle);
+                        //     }
+                        //     break;
+                        // case SDLK_f:
+                        //     DialogControlSetFlags(pDialog, 1, CTRL_FLAG_RIGHTJUSTIFIED);
+                        //     DialogControlSetWidth(pDialog, 1, 400);
+                        //     printf("H: %d\n",DialogControlSetHeight(pDialog, 3, 160));
+                        //     DialogControlShow(pDialog, 2, f); f^=1;
+                        //     break;
                         default:
                             break;
                         }
@@ -274,11 +283,14 @@ int DialogDoModal(t_dialog*pDialog){
                 break;
             case SDL_KEYUP:
                 switch(event.key.keysym.scancode){
-                case 225:   /* LEFT SHIFT */
+                case SDL_SCANCODE_LSHIFT:   /* LEFT SHIFT */
                     mBitsClr(pDialog->m_uStatus, ST_DLG_LEFTSHIFT);
                     break;
-                case 229:   /* RIGHT SHIFT */
+                case SDL_SCANCODE_RSHIFT:   /* RIGHT SHIFT */
                     mBitsClr(pDialog->m_uStatus, ST_DLG_RIGHTSHIFT);
+                    break;
+                case SDL_SCANCODE_RALT:
+                    mBitsClr(pDialog->m_uStatus, ST_DLG_ALTGR);
                     break;
                 default:
                     break;

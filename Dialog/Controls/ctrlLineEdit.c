@@ -34,6 +34,7 @@ enum e_controlFlags{
     CTRL_DLG_INSERTLOCKED       = 0x00040000,
     CTRL_DLG_LEFTSHIFT          = 0x00080000,
     CTRL_DLG_RIGHTSHIFT         = 0x00100000,
+    CTRL_DLG_ALTGR              = 0x00200000,
 };
 
 
@@ -225,13 +226,99 @@ t_lineEdit*LineEditDel(t_lineEdit*pLineEdit){
     return pLineEdit;
 }
 
+
+t_lineEdit*_LineEditInsertChar(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
+    if(mIsBitsClr(iStatus, CTRL_DLG_INSERTLOCKED)){
+        /* Replace mode ***************************************************************************************/
+        pLineEdit->m_pTextString[pLineEdit->m_iCaretIndex]=pEvent->key.keysym.sym;
+        if(pLineEdit->m_iCaretIndex==pLineEdit->m_iTextLength){
+            pLineEdit->m_iTextLength++;
+            pLineEdit->m_pTextString[pLineEdit->m_iTextLength]='\0';
+        }
+        pLineEdit->m_iCaretIndex++;
+        if(pLineEdit->m_iCaretIndex==pLineEdit->m_iTextCapacity-1){
+            pLineEdit->m_pTextString=(char*)realloc(pLineEdit->m_pTextString, pLineEdit->m_iTextCapacity*=1.5);
+        }
+    }
+    else{
+        /* Insert mode ****************************************************************************************/
+        for(int k=pLineEdit->m_iTextLength; k>=pLineEdit->m_iCaretIndex; k--){
+            pLineEdit->m_pTextString[k+1]=pLineEdit->m_pTextString[k];
+        }
+        pLineEdit->m_pTextString[pLineEdit->m_iCaretIndex]=pEvent->key.keysym.sym;
+        pLineEdit->m_iCaretIndex++;
+        pLineEdit->m_iTextLength++;
+        if(pLineEdit->m_iTextLength==pLineEdit->m_iTextCapacity-1){
+            pLineEdit->m_pTextString=(char*)realloc(pLineEdit->m_pTextString, pLineEdit->m_iTextCapacity*=1.5);
+        }
+    }
+    return pLineEdit;
+}
+
 t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
     assert(pLineEdit);
     switch (pEvent->type){
     case SDL_KEYDOWN:
         switch (pEvent->key.keysym.scancode){
+        case SDL_SCANCODE_DELETE:
+            if(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT)) return NULL;
+            /* Suppress */
+            if(pLineEdit->m_iTextLength && pLineEdit->m_iCaretIndex!=pLineEdit->m_iTextLength){
+                for(int k=pLineEdit->m_iCaretIndex; k<pLineEdit->m_iTextLength; k++){
+                    pLineEdit->m_pTextString[k]=pLineEdit->m_pTextString[k+1];
+                }
+                pLineEdit->m_iTextLength--;
+                _LineEditAdjustRightAlignment(pLineEdit);
+            }
+            break;
+        case SDL_SCANCODE_KP_PERIOD:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='.';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break; 
+        case SDL_SCANCODE_KP_0:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='0';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;        
+        case SDL_SCANCODE_KP_2:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='2';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;
+        case SDL_SCANCODE_KP_3:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='3';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;
+        case SDL_SCANCODE_KP_5:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='5';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;
+        case SDL_SCANCODE_KP_8:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='8';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;
+        case SDL_SCANCODE_KP_9:
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='9';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            } 
+            break;
         case SDL_SCANCODE_KP_6:    /* 94 : RIGHT ARROW NUM PAD or 6 */
-            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)) break; 
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='6';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+                break;
+            } 
             //no break;
         case SDL_SCANCODE_RIGHT:    /* 79 : RIGHT ARROW */
             if(pLineEdit->m_iCaretIndex<pLineEdit->m_iTextLength){
@@ -240,7 +327,11 @@ t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
             }
             break;
         case SDL_SCANCODE_KP_4:    /* 92 : LEFT ARROW NUM PAD or 4 */
-            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)) break;
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='4';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+                break;
+            }
             //no break;
         case SDL_SCANCODE_LEFT:    /* 80 : LEFT ARROW */
             mBitsClr(pLineEdit->m_iStatus, CTRL_IFLAG_DRAW_BY_END);
@@ -251,7 +342,11 @@ t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
             else  if(pLineEdit->m_iCaretIndex) pLineEdit->m_iCaretIndex--;
             break;
         case SDL_SCANCODE_KP_1:    /* 89 : END NUM PAD or 1 */
-            if(mIsBitsClr(iStatus, CTRL_DLG_NUMLOCKED)){
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='1';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+            }
+            else{
                 while(pLineEdit->m_iCaretIndex<pLineEdit->m_iTextLength){
                     pLineEdit->m_iCaretIndex++;
                     _LineEditAdjustRightAlignment(pLineEdit);
@@ -259,7 +354,12 @@ t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
             }
             break;
         case SDL_SCANCODE_KP_7:    /* 95 : HOME NUM PAD or 7 */
-            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)) break;
+            if(mIsBitsSet(iStatus, CTRL_DLG_NUMLOCKED)){
+                pEvent->key.keysym.sym='7';
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
+                break;
+            }
+            //no break;
         case SDL_SCANCODE_HOME:    /* 74 : Home/Fin PC Portable */
             pLineEdit->m_iTextOffset=pLineEdit->m_iCaretIndex=0;
             mBitsClr(pLineEdit->m_iStatus, CTRL_IFLAG_DRAW_BY_END);
@@ -280,19 +380,106 @@ t_lineEdit*LineEditDoEvent(t_lineEdit*pLineEdit, SDL_Event*pEvent, int iStatus){
             if(
                 (pEvent->key.keysym.scancode>=SDL_SCANCODE_A        )&&(pEvent->key.keysym.scancode<=SDL_SCANCODE_0         ) ||
                 (pEvent->key.keysym.scancode>=SDL_SCANCODE_SPACE    )&&(pEvent->key.keysym.scancode<=SDL_SCANCODE_SLASH     ) ||
-                (pEvent->key.keysym.scancode>=SDL_SCANCODE_KP_DIVIDE)&&(pEvent->key.keysym.scancode<=SDL_SCANCODE_KP_PLUS   )
+                (pEvent->key.keysym.scancode>=SDL_SCANCODE_KP_DIVIDE)&&(pEvent->key.keysym.scancode<=SDL_SCANCODE_KP_PLUS   ) ||
+                (pEvent->key.keysym.scancode==SDL_SCANCODE_NONUSBACKSLASH/* < */)
             ){
                 printf("key:%c\n", pEvent->key.keysym.sym);
                 // pLineEdit->m_pTextString[pLineEdit->m_iTextLength]=pEvent->key.keysym.sym;
-                pLineEdit->m_pTextString[pLineEdit->m_iCaretIndex]=pEvent->key.keysym.sym;
-                if(pLineEdit->m_iCaretIndex==pLineEdit->m_iTextLength){
-                    pLineEdit->m_iTextLength++;
-                    pLineEdit->m_pTextString[pLineEdit->m_iTextLength]='\0';
+                switch (pEvent->key.keysym.scancode){
+                case SDL_SCANCODE_NONUSBACKSLASH: /* < > */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'>':'<';
+                    break;
+                case SDL_SCANCODE_LEFTBRACKET: /* ^ " */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'"':'^';
+                    break;
+                case SDL_SCANCODE_M: /* , ? */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'?':',';
+                    break;
+                case SDL_SCANCODE_COMMA: /* ; .*/
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'.':';';
+                    break;
+                case SDL_SCANCODE_PERIOD:   /* : / */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'/':':';
+                    break;
+                case SDL_SCANCODE_SLASH:   /* ! § */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'§':'!';
+                    break;
+                case SDL_SCANCODE_APOSTROPHE:   /* ù % */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'%':'ù';
+                    break;
+                case SDL_SCANCODE_RIGHTBRACKET: /* $ £*/
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'£':'$';
+                    break;
+                case SDL_SCANCODE_BACKSLASH:    /* µ * */
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'µ':'*';
+                    break;
+                case SDL_SCANCODE_1:
+                    pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'1':'&';
+                    break;
+                case SDL_SCANCODE_2:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='~';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'2':'é';
+                    break;
+                case SDL_SCANCODE_3:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='#';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'3':'"';
+                    break;
+                case SDL_SCANCODE_4:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='{';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'4':'\'';
+                    break;
+                case SDL_SCANCODE_5:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='[';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'5':'(';
+                    break;
+                case SDL_SCANCODE_6:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='|';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'6':'-';
+                    break;
+                case SDL_SCANCODE_7:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='`';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'7':'è';
+                    break;
+                case SDL_SCANCODE_8:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='\\';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'8':'_';
+                    break;
+                case SDL_SCANCODE_9:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='^';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'9':'ç';
+                    break;
+                case SDL_SCANCODE_0:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='@';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'0':'à';
+                    break;
+                case SDL_SCANCODE_MINUS:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym=']';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'°':')';
+                    break;
+                case SDL_SCANCODE_EQUALS:
+                    if(mIsBitsSet(iStatus, CTRL_DLG_ALTGR)) pEvent->key.keysym.sym='}';
+                    else pEvent->key.keysym.sym=(mIsBitsSet(iStatus, CTRL_DLG_LEFTSHIFT))?'+':'=';
+                    break;
+                case SDL_SCANCODE_KP_DIVIDE:
+                    pEvent->key.keysym.sym='/';
+                    break;
+                case SDL_SCANCODE_KP_MULTIPLY:
+                    pEvent->key.keysym.sym='*';
+                    break;
+                case SDL_SCANCODE_KP_MINUS:
+                    pEvent->key.keysym.sym='-';
+                    break;
+                case SDL_SCANCODE_KP_PLUS:
+                    pEvent->key.keysym.sym='+';
+                    break;
+                default:
+                    if(pEvent->key.keysym.scancode>=SDL_SCANCODE_A && pEvent->key.keysym.scancode<=SDL_SCANCODE_Z && mBitsMsk(iStatus, CTRL_DLG_CAPSLOCKED|CTRL_DLG_LEFTSHIFT)){
+                        pEvent->key.keysym.sym-=0x20;
+                    }
+                    break;
                 }
-                pLineEdit->m_iCaretIndex++;
-                if(pLineEdit->m_iCaretIndex==pLineEdit->m_iTextCapacity-1){
-                    pLineEdit->m_pTextString=(char*)realloc(pLineEdit->m_pTextString, pLineEdit->m_iTextCapacity*=1.5);
-                }
+
+                _LineEditInsertChar(pLineEdit, pEvent, iStatus);
                 _LineEditAdjustRightAlignment(pLineEdit);
                 return pLineEdit;
             }
